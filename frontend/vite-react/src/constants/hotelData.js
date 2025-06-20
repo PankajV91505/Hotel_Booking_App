@@ -1,3 +1,4 @@
+// src/constants/hotelData.js
 export const hotels = [
   {
     id: 1,
@@ -12,7 +13,20 @@ export const hotels = [
     discount: 17,
     reviews: 1250,
   },
-  // ... (all other hotel objects)
+  {
+    id: 2,
+    name: "Ocean View Resort",
+    location: "Goa, India",
+    rating: 4.8,
+    price: 5200,
+    originalPrice: 6000,
+    image: "/placeholder.svg?height=200&width=300",
+    roomType: "Suite",
+    amenities: ["WiFi", "AC", "Pool", "Restaurant"],
+    discount: 13,
+    reviews: 890,
+  },
+  // ... rest of the hotel data
 ];
 
 export const amenityIcons = {

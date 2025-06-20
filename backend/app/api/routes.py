@@ -1,12 +1,16 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint
 
-api_bp = Blueprint('api', __name__)
+# Import route blueprints from individual modules
+from app.routes.auth_routes import bp as auth_bp
+from app.routes.hotel_routes import bp as hotel_bp
+from app.routes.room_routes import bp as room_bp
+from app.routes.booking_routes import bp as booking_bp
 
-@api_bp.route("/hotels", methods=["GET"])
-def get_hotels():
-    # Dummy data
-    hotels = [
-        {"id": 1, "name": "Hotel Paradise", "city": "Delhi", "price": 1999},
-        {"id": 2, "name": "Sea View Resort", "city": "Goa", "price": 2999}
-    ]
-    return jsonify(hotels)
+# Create a parent API blueprint
+api_bp = Blueprint('api', __name__, url_prefix='/api')
+
+# Register all route blueprints under /api
+api_bp.register_blueprint(auth_bp)
+api_bp.register_blueprint(hotel_bp)
+api_bp.register_blueprint(room_bp)
+api_bp.register_blueprint(booking_bp)
