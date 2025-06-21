@@ -8,7 +8,7 @@ import { hotels } from "../constants/hotelData";
 
 function Hotels({ user, setIsAuthModalOpen, setAuthTab }) {
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
-  const [priceRange, setPriceRange] = useState([500, 15000]); // Matches Filters.jsx
+  const [priceRange, setPriceRange] = useState([1000, 10000]);
   const [selectedRating, setSelectedRating] = useState([]);
   const [selectedRoomTypes, setSelectedRoomTypes] = useState([]);
   const [selectedAmenities, setSelectedAmenities] = useState([]);
