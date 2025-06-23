@@ -1,3 +1,4 @@
+@import "tailwindcss";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -80,16 +81,16 @@
   animation: bounceIn 0.8s ease-out forwards;
 }
 
-/* === Slider Styling === */
+/* === Custom Slider Styling === */
 .slider {
-  -webkit-appearance: none;
   appearance: none;
+  -webkit-appearance: none;
   width: 100%;
   height: 8px;
   border-radius: 4px;
   background: linear-gradient(to right, #3b82f6, #8b5cf6);
+  transition: background 0.3s ease;
   outline: none;
-  transition: background 0.3s;
 }
 
 .slider:focus {
@@ -97,34 +98,34 @@
 }
 
 .slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
   appearance: none;
+  -webkit-appearance: none;
   width: 20px;
   height: 20px;
-  background: #3b82f6;
+  background-color: #3b82f6;
   border-radius: 50%;
   cursor: pointer;
-  box-shadow: 0 0 0 2px white, 0 0 0 4px #3b82f6;
-  transition: transform 0.2s ease-in-out, background 0.2s ease;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #3b82f6;
+  transition: transform 0.2s ease-in-out, background-color 0.2s ease;
 }
 
 .slider::-webkit-slider-thumb:hover {
   transform: scale(1.25);
-  background: #2563eb;
+  background-color: #2563eb;
 }
 
 .slider::-moz-range-thumb {
   width: 20px;
   height: 20px;
-  background: #3b82f6;
+  background-color: #3b82f6;
   border: none;
   border-radius: 50%;
   cursor: pointer;
-  box-shadow: 0 0 0 2px white, 0 0 0 4px #3b82f6;
-  transition: transform 0.2s ease-in-out, background 0.2s ease;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #3b82f6;
+  transition: transform 0.2s ease-in-out, background-color 0.2s ease;
 }
 
 .slider::-moz-range-thumb:hover {
   transform: scale(1.25);
-  background: #2563eb;
+  background-color: #2563eb;
 }

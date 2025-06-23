@@ -39,7 +39,7 @@ function About() {
           </p>
         </div>
       </div>
-      <Footer isLoaded={isLoaded} />
+      {/* <Footer isLoaded={isLoaded} /> */}
     </div>
   );
 }

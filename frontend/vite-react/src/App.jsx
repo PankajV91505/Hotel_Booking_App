@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom"; // ✅ Removed BrowserRouter
 import ErrorBoundary from "./components/ErrorBoundary";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -41,7 +41,7 @@ function App() {
   };
 
   return (
-    <BrowserRouter>
+    <>
       <Navbar
         isLoaded={isLoaded}
         user={user}
@@ -98,8 +98,9 @@ function App() {
           <Route path="/register" element={<Register onRegister={handleRegister} isLoaded={isLoaded} />} />
         </Routes>
       </ErrorBoundary>
+
       <Footer isLoaded={isLoaded} />
-    </BrowserRouter>
+    </>
   );
 }
 

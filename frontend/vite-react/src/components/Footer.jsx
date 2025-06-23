@@ -1,6 +1,12 @@
 // src/components/Footer.jsx
 import { Facebook, Twitter, Instagram, Youtube } from "lucide-react";
 
+const footerLinks = {
+  "About Us": ["Our Story", "Careers", "Press", "Blog"],
+  Support: ["Help Center", "Contact Us", "Safety", "Cancellation"],
+  Legal: ["Privacy Policy", "Terms of Service", "Cookie Policy", "Disclaimer"],
+};
+
 export const Footer = ({ isLoaded }) => {
   return (
     <footer
@@ -15,79 +21,52 @@ export const Footer = ({ isLoaded }) => {
             <div className="text-2xl font-bold text-blue-400 mb-4 transition-all duration-300 group-hover:scale-105">
               StayEasy
             </div>
-            <p className="text-gray-400 mb-4 transition-colors duration-300 group-hover:text-gray-300">
+            <p className="text-gray-400 mb-4 group-hover:text-gray-300 transition-colors duration-300">
               Your trusted partner for finding the perfect accommodation worldwide.
             </p>
-            <div className="flex space-x-4">
-              <Facebook className="h-6 w-6 text-gray-400 hover:text-white cursor-pointer transition-all duration-300 hover:scale-125 hover:rotate-12" />
-              <Twitter className="h-6 w-6 text-gray-400 hover:text-white cursor-pointer transition-all duration-300 hover:scale-125 hover:rotate-12" />
-              <Instagram className="h-6 w-6 text-gray-400 hover:text-white cursor-pointer transition-all duration-300 hover:scale-125 hover:rotate-12" />
-              <Youtube className="h-6 w-6 text-gray-400 hover:text-white cursor-pointer transition-all duration-300 hover:scale-125 hover:rotate-12" />
+            <div className="flex space-x-4" aria-label="Social media">
+              {[Facebook, Twitter, Instagram, Youtube].map((Icon, index) => (
+                <a
+                  key={index}
+                  href="#"
+                  aria-label={Icon.name}
+                  className="text-gray-400 hover:text-white transition-all duration-300 hover:scale-125 hover:rotate-12"
+                >
+                  <Icon className="h-6 w-6" />
+                </a>
+              ))}
             </div>
           </div>
 
-          {/* About Us */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">About Us</h3>
-            <ul className="space-y-2">
-              {["Our Story", "Careers", "Press", "Blog"].map((item, index) => (
-                <li key={item}>
-                  <a
-                    href="#"
-                    className="text-gray-400 hover:text-white transition-all duration-300 hover:translate-x-2 inline-block"
-                    style={{ transitionDelay: `${index * 50}ms` }}
-                  >
-                    {item}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Support */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Support</h3>
-            <ul className="space-y-2">
-              {["Help Center", "Contact Us", "Safety", "Cancellation"].map((item, index) => (
-                <li key={item}>
-                  <a
-                    href="#"
-                    className="text-gray-400 hover:text-white transition-all duration-300 hover:translate-x-2 inline-block"
-                    style={{ transitionDelay: `${index * 50}ms` }}
-                  >
-                    {item}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Legal */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Legal</h3>
-            <ul className="space-y-2">
-              {["Privacy Policy", "Terms of Service", "Cookie Policy", "Disclaimer"].map((item, index) => (
-                <li key={item}>
-                  <a
-                    href="#"
-                    className="text-gray-400 hover:text-white transition-all duration-300 hover:translate-x-2 inline-block"
-                    style={{ transitionDelay: `${index * 50}ms` }}
-                  >
-                    {item}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {/* Footer Links */}
+          {Object.entries(footerLinks).map(([section, items]) => (
+            <nav key={section} aria-label={section}>
+              <h3 className="text-lg font-semibold mb-4">{section}</h3>
+              <ul className="space-y-2">
+                {items.map((item, idx) => (
+                  <li key={`${section}-${item}`}>
+                    <a
+                      href="#"
+                      className="inline-block text-gray-400 hover:text-white transition-all duration-300 hover:translate-x-2"
+                      style={{ transitionDelay: `${idx * 50}ms` }}
+                    >
+                      {item}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ))}
         </div>
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center">
-          <p className="text-gray-400 transition-colors duration-300 hover:text-gray-300">
-            © 2024 StayEasy. All rights reserved.
+          <p className="text-gray-400 hover:text-gray-300 transition-colors duration-300">
+            © {new Date().getFullYear()} StayEasy. All rights reserved.
           </p>
         </div>
       </div>
     </footer>
   );
 };
+
 export default Footer;
