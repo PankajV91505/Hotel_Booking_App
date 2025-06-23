@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom"; // Added
-import { ChevronLeft, ChevronRight, Filter, AlertCircle } from "lucide-react";
+import { useLocation } from "react-router-dom";
+import { ChevronLeft, ChevronRight, Filter, AlertCircle, X } from "lucide-react";
 import SearchBar from "../components/SearchBar";
 import Filters from "../components/Filters";
 import HotelCard from "../components/HotelCard";
-import BookingModal from "../components/BookingModal";
 import { hotels } from "../constants/hotelData";
 
 function Hotels({ user, setIsAuthModalOpen, setAuthTab }) {
@@ -20,37 +19,19 @@ function Hotels({ user, setIsAuthModalOpen, setAuthTab }) {
   const [checkInDate, setCheckInDate] = useState("");
   const [checkOutDate, setCheckOutDate] = useState("");
   const [guests, setGuests] = useState("1");
-  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [filteredHotels, setFilteredHotels] = useState(hotels);
+  const [searchError, setSearchError] = useState("");
   const [selectedHotel, setSelectedHotel] = useState(null);
-  const [bookingStep, setBookingStep] = useState(1);
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    checkIn: "",
-    checkOut: "",
-    guests: "1",
-    specialRequests: "",
-    cardNumber: "",
-    expiryDate: "",
-    cvv: "",
-    cardName: "",
-  });
-  const [formErrors, setFormErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [filteredHotels, setFilteredHotels] = useState(hotels); // Added
-  const [searchError, setSearchError] = useState(""); // Added
-  const location = useLocation(); // Added
 
-  // Handle search parameters from Home.jsx
+  const location = useLocation();
+
   useEffect(() => {
     if (location.state) {
       setSearchLocation(location.state.searchLocation || "");
       setCheckInDate(location.state.checkInDate || "");
       setCheckOutDate(location.state.checkOutDate || "");
       setGuests(location.state.guests || "1");
-      handleSearch(); // Trigger search with new params
+      handleSearch();
     }
   }, [location.state]);
 
@@ -58,32 +39,13 @@ function Hotels({ user, setIsAuthModalOpen, setAuthTab }) {
     setIsLoaded(true);
     const timer = setTimeout(() => {
       filteredHotels.forEach((_, index) => {
-        // Changed to filteredHotels
         setTimeout(() => {
           setVisibleHotels((prev) => [...prev, index]);
         }, index * 150);
       });
     }, 500);
     return () => clearTimeout(timer);
-  }, [filteredHotels]); // Depend on filteredHotels
-
-  const toggleRating = (rating) => {
-    setSelectedRating((prev) =>
-      prev.includes(rating) ? prev.filter((r) => r !== rating) : [...prev, rating]
-    );
-  };
-
-  const toggleRoomType = (type) => {
-    setSelectedRoomTypes((prev) =>
-      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
-    );
-  };
-
-  const toggleAmenity = (amenity) => {
-    setSelectedAmenities((prev) =>
-      prev.includes(amenity) ? prev.filter((a) => a !== amenity) : [...prev, amenity]
-    );
-  };
+  }, [filteredHotels]);
 
   const handleSearch = () => {
     setSearchError("");
@@ -108,7 +70,6 @@ function Hotels({ user, setIsAuthModalOpen, setAuthTab }) {
     setFilteredHotels(filtered.length ? filtered : []);
     setCurrentPage(1);
     setVisibleHotels([]);
-    console.log("Searching with:", { location: searchLocation, checkIn: checkInDate, checkOut: checkOutDate, guests });
   };
 
   const applyFilters = () => {
@@ -149,30 +110,16 @@ function Hotels({ user, setIsAuthModalOpen, setAuthTab }) {
     applyFilters();
   }, [priceRange, selectedRating, selectedRoomTypes, selectedAmenities, searchLocation]);
 
-  const handleBookNow = (hotel) => {
-    if (!user) {
-      setIsAuthModalOpen(true);
-      setAuthTab("login");
-      return;
-    }
+  const handleViewDetails = (hotel) => {
     setSelectedHotel(hotel);
-    setIsBookingModalOpen(true);
-    setBookingStep(1);
-    setFormData({
-      firstName: user.firstName || "",
-      lastName: user.lastName || "",
-      email: user.email || "",
-      phone: "",
-      checkIn: checkInDate || "",
-      checkOut: checkOutDate || "",
-      guests: guests || "1",
-      specialRequests: "",
-      cardNumber: "",
-      expiryDate: "",
-      cvv: "",
-      cardName: "",
-    });
-    setFormErrors({});
+  };
+
+  const handleCloseModal = () => {
+    setSelectedHotel(null);
+  };
+
+  const handleBookNow = (hotel) => {
+    alert(`✅ Booking confirmed for ${hotel.name}!`);
   };
 
   const hotelsPerPage = 9;
@@ -218,11 +165,29 @@ function Hotels({ user, setIsAuthModalOpen, setAuthTab }) {
             priceRange={priceRange}
             setPriceRange={setPriceRange}
             selectedRating={selectedRating}
-            toggleRating={toggleRating}
+            toggleRating={(rating) => {
+              setSelectedRating((prev) =>
+                prev.includes(rating)
+                  ? prev.filter((r) => r !== rating)
+                  : [...prev, rating]
+              );
+            }}
             selectedRoomTypes={selectedRoomTypes}
-            toggleRoomType={toggleRoomType}
+            toggleRoomType={(type) => {
+              setSelectedRoomTypes((prev) =>
+                prev.includes(type)
+                  ? prev.filter((t) => t !== type)
+                  : [...prev, type]
+              );
+            }}
             selectedAmenities={selectedAmenities}
-            toggleAmenity={toggleAmenity}
+            toggleAmenity={(amenity) => {
+              setSelectedAmenities((prev) =>
+                prev.includes(amenity)
+                  ? prev.filter((a) => a !== amenity)
+                  : [...prev, amenity]
+              );
+            }}
             isMobileFilterOpen={isMobileFilterOpen}
             setIsMobileFilterOpen={setIsMobileFilterOpen}
           />
@@ -253,6 +218,7 @@ function Hotels({ user, setIsAuthModalOpen, setAuthTab }) {
                     index={index}
                     visibleHotels={visibleHotels}
                     handleBookNow={() => handleBookNow(hotel)}
+                    handleViewDetails={() => handleViewDetails(hotel)}
                   />
                 ))}
               </div>
@@ -291,25 +257,46 @@ function Hotels({ user, setIsAuthModalOpen, setAuthTab }) {
           </div>
         </div>
       </div>
-      {isMobileFilterOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden transition-opacity duration-300"
-          onClick={() => setIsMobileFilterOpen(false)}
-        />
+
+      {selectedHotel && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm px-4">
+          <div className="bg-white dark:bg-gray-900 w-full max-w-lg rounded-xl overflow-hidden shadow-lg relative">
+            <button
+              onClick={handleCloseModal}
+              className="absolute top-4 right-4 text-gray-400 hover:text-red-600"
+            >
+              <X className="h-5 w-5" />
+            </button>
+            <img
+              src={selectedHotel.image || "/placeholder.svg"}
+              alt={selectedHotel.name}
+              className="w-full h-56 object-cover"
+            />
+            <div className="p-6">
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">
+                {selectedHotel.name}
+              </h2>
+              <p className="text-gray-600 dark:text-gray-300 mb-4">
+                {selectedHotel.location}
+              </p>
+              <div className="flex justify-between items-center mb-4">
+                <span className="text-xl font-semibold text-blue-600">
+                  ₹{selectedHotel.price.toLocaleString()}
+                </span>
+                <span className="text-sm text-gray-500">
+                  Rating: {selectedHotel.rating}
+                </span>
+              </div>
+              <button
+                onClick={handleCloseModal}
+                className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:scale-105 transition-transform"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
       )}
-      <BookingModal
-        isBookingModalOpen={isBookingModalOpen}
-        setIsBookingModalOpen={setIsBookingModalOpen}
-        selectedHotel={selectedHotel}
-        bookingStep={bookingStep}
-        setBookingStep={setBookingStep}
-        formData={formData}
-        setFormData={setFormData}
-        formErrors={formErrors}
-        setFormErrors={setFormErrors}
-        isSubmitting={isSubmitting}
-        setIsSubmitting={setIsSubmitting}
-      />
     </div>
   );
 }

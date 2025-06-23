@@ -9,15 +9,8 @@ import {
   PawPrint,
   Snowflake,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 
-const HotelCard = ({ hotel, index, visibleHotels, handleBookNow }) => {
-  const navigate = useNavigate();
-
-  const handleViewDetails = () => {
-    navigate(`/hotels/${hotel.id}`, { state: { hotel } });
-  };
-
+const HotelCard = ({ hotel, index, visibleHotels, handleBookNow, handleViewDetails }) => {
   const amenityIcons = {
     WiFi: Wifi,
     AC: Snowflake,
@@ -40,7 +33,6 @@ const HotelCard = ({ hotel, index, visibleHotels, handleBookNow }) => {
         animationDelay: `${index * 150}ms`,
       }}
     >
-      {/* Image */}
       <div className="relative overflow-hidden">
         <img
           src={hotel.image || "/placeholder.svg"}
@@ -55,9 +47,7 @@ const HotelCard = ({ hotel, index, visibleHotels, handleBookNow }) => {
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
 
-      {/* Content */}
       <div className="p-4 sm:p-5 md:p-6">
-        {/* Hotel Name + Rating */}
         <div className="flex items-start justify-between mb-2">
           <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 transition-colors duration-300">
             {hotel.name}
@@ -68,13 +58,11 @@ const HotelCard = ({ hotel, index, visibleHotels, handleBookNow }) => {
           </div>
         </div>
 
-        {/* Location */}
         <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 flex items-center">
           <MapPin className="h-4 w-4 mr-1" />
           {hotel.location}
         </p>
 
-        {/* Room type & Reviews */}
         <div className="flex flex-wrap items-center gap-2 mb-4">
           <span className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded text-xs sm:text-sm">
             {hotel.roomType}
@@ -84,9 +72,8 @@ const HotelCard = ({ hotel, index, visibleHotels, handleBookNow }) => {
           </span>
         </div>
 
-        {/* Amenities */}
         <div className="flex flex-wrap gap-2 mb-4">
-          {hotel.amenities.slice(0, 4).map((amenity, idx) => {
+          {hotel.amenities.slice(0, 4).map((amenity) => {
             const Icon = amenityIcons[amenity];
             return Icon ? (
               <div
@@ -99,11 +86,12 @@ const HotelCard = ({ hotel, index, visibleHotels, handleBookNow }) => {
             ) : null;
           })}
           {hotel.amenities.length > 4 && (
-            <span className="text-sm text-gray-500 dark:text-gray-400">+{hotel.amenities.length - 4} more</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">
+              +{hotel.amenities.length - 4} more
+            </span>
           )}
         </div>
 
-        {/* Price & Buttons */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
           <div className="flex items-baseline gap-2">
             <span className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
@@ -119,7 +107,7 @@ const HotelCard = ({ hotel, index, visibleHotels, handleBookNow }) => {
 
           <div className="flex flex-col sm:flex-row gap-2">
             <button
-              onClick={handleViewDetails}
+              onClick={() => handleViewDetails(hotel)}
               className="px-4 py-2 text-sm border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-300"
             >
               View Details

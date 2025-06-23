@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
-import Footer from "../components/Footer";
 import Login from "../components/Login";
 import Register from "../components/Register";
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 
 export default function Home({
   user,
@@ -21,6 +20,7 @@ export default function Home({
   const [checkInDate, setCheckInDate] = useState("");
   const [checkOutDate, setCheckOutDate] = useState("");
   const [guests, setGuests] = useState("1");
+  const [selectedCity, setSelectedCity] = useState(null);
   const navigate = useNavigate();
 
   const handleSearch = () => {
@@ -34,6 +34,25 @@ export default function Home({
   };
 
   const cities = ["Mumbai", "Goa", "Delhi"];
+
+  const openCityModal = (city) => {
+    setSelectedCity({
+      name: city,
+      description: `Explore top-rated hotels and exclusive deals in ${city}.`,
+      image: `/images/${city.toLowerCase()}.jpg`,
+      price: Math.floor(1500 + Math.random() * 3000),
+      rating: (4 + Math.random()).toFixed(1),
+    });
+  };
+
+  const closeModal = () => {
+    setSelectedCity(null);
+  };
+
+  const handleBookCity = () => {
+    alert(`✅ Booking confirmed for ${selectedCity.name}!`);
+    closeModal();
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 font-sans">
@@ -101,17 +120,25 @@ export default function Home({
                 <p className="text-gray-600 dark:text-gray-400">
                   Explore hotels in {city}
                 </p>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSearchLocation(city);
-                    handleSearch();
-                  }}
-                  className="mt-4 inline-flex items-center text-blue-600 hover:text-blue-700 transition-colors duration-300"
-                >
-                  <Search className="h-4 w-4 mr-1" />
-                  Search Hotels
-                </button>
+                <div className="mt-4 flex space-x-3">
+                  <button
+                    type="button"
+                    onClick={() => openCityModal(city)}
+                    className="text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                  >
+                    View Details
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSearchLocation(city);
+                      handleSearch();
+                    }}
+                    className="text-green-600 hover:text-green-700 font-medium transition-colors"
+                  >
+                    Book Now
+                  </button>
+                </div>
               </div>
             ))}
           </div>
@@ -143,7 +170,55 @@ export default function Home({
         </div>
       )}
 
-      {/* <Footer isLoaded={isLoaded} /> */}
+      {/* City Modal */}
+      {selectedCity && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm px-4">
+          <div className="bg-white dark:bg-gray-900 w-full max-w-lg rounded-xl overflow-hidden shadow-lg relative">
+            {/* Close */}
+            <button
+              onClick={closeModal}
+              className="absolute top-4 right-4 text-gray-400 hover:text-red-600"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            <img
+              src={selectedCity.image}
+              alt={selectedCity.name}
+              className="w-full h-56 object-cover"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = "/placeholder.svg";
+              }}
+            />
+
+            <div className="p-6">
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">
+                {selectedCity.name}
+              </h2>
+              <p className="text-gray-600 dark:text-gray-300 mb-4">
+                {selectedCity.description}
+              </p>
+
+              <div className="flex justify-between items-center mb-4">
+                <span className="text-xl font-semibold text-blue-600">
+                  ₹{selectedCity.price.toLocaleString()}
+                </span>
+                <span className="text-sm text-gray-500">
+                  Rating: {selectedCity.rating}
+                </span>
+              </div>
+
+              <button
+                onClick={handleBookCity}
+                className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:scale-105 transition-transform"
+              >
+                Confirm Booking
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
