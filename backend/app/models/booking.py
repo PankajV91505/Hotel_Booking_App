@@ -1,15 +1,12 @@
-from app import db
-from datetime import datetime
-import uuid
+from app.config.db import db
 
 class Booking(db.Model):
-    __tablename__ = 'bookings'
-    id = db.Column(db.String, primary_key=True, default=lambda: str(uuid.uuid4()))
-    user_id = db.Column(db.String, db.ForeignKey('users.id'), nullable=False)
-    hotel_id = db.Column(db.String, db.ForeignKey('hotels.id'), nullable=False)
-    room_id = db.Column(db.String, db.ForeignKey('rooms.id'), nullable=False)
-    check_in = db.Column(db.Date, nullable=False)
-    check_out = db.Column(db.Date, nullable=False)
-    status = db.Column(db.String, default='confirmed')
-    total_price = db.Column(db.Numeric(10, 2))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    hotel_id = db.Column(db.Integer, db.ForeignKey('hotel.id'))
+    check_in = db.Column(db.String(50))
+    check_out = db.Column(db.String(50))
+    guests = db.Column(db.Integer)
+
+    user = db.relationship('User', backref='bookings')
+    hotel = db.relationship('Hotel', backref='bookings')

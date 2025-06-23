@@ -1,12 +1,19 @@
-from flask import Blueprint
-from app.controllers import hotel_controller
-from app.middlewares.auth_middleware import jwt_required_role
-from flask_jwt_extended import jwt_required
+from flask import Blueprint, jsonify
+from app.models.hotel import Hotel
 
-bp = Blueprint('hotels', __name__, url_prefix='/hotels')
+bp = Blueprint('hotel', __name__)
 
-bp.post('')(jwt_required_role('admin')(hotel_controller.create_hotel))
-bp.get('')(hotel_controller.get_hotels)
-bp.get('/<hotel_id>')(hotel_controller.get_hotel_detail)
-bp.put('/<hotel_id>')(jwt_required_role('admin')(hotel_controller.update_hotel))
-bp.delete('/<hotel_id>')(jwt_required_role('admin')(hotel_controller.delete_hotel))
+@bp.route('/hotels', methods=['GET'])
+def get_hotels():
+    hotels = Hotel.query.all()
+    result = []
+    for hotel in hotels:
+        result.append({
+            "id": hotel.id,
+            "name": hotel.name,
+            "location": hotel.location,
+            "price": hotel.price,
+            "rating": hotel.rating,
+            "image": hotel.image
+        })
+    return jsonify(result)
