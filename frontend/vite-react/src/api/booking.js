@@ -1,18 +1,29 @@
-import API from './axiosInstance'; // Make sure your Axios instance is configured with baseURL
+import API from './axiosInstance'; // Ensure baseURL is set here
 
-// Book Hotel
-export const bookHotel = async (hotelId, checkIn, checkOut, guests, token) => {
+// Book Hotel with Customer Details
+export const bookHotel = async (hotelId, checkIn, checkOut, guests, customerEmail, customerPhone, token) => {
   try {
-    const response = await API.post('/api/bookings/create-booking', 
-      { room_id: hotelId, check_in: checkIn, check_out: checkOut, guests },
+    const response = await API.post('/api/book', 
+      {
+        hotelId,              // Hotel ID
+        checkIn,              // Check-in date
+        checkOut,             // Check-out date
+        guests,               // Number of guests
+        customer_email: customerEmail,   // Customer Email
+        customer_phone: customerPhone    // Customer Phone
+      },
       {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
       }
     );
 
-    return { success: true, message: response.data.msg, bookingId: response.data.booking_id };
+    return { 
+      success: true, 
+      message: response.data.message 
+    };
 
   } catch (error) {
     console.error('Booking error:', error);
@@ -26,7 +37,7 @@ export const bookHotel = async (hotelId, checkIn, checkOut, guests, token) => {
 // Get User Bookings
 export const getMyBookings = async (token) => {
   try {
-    const response = await API.get('/api/bookings/my', {
+    const response = await API.get('/api/mybookings', {
       headers: {
         Authorization: `Bearer ${token}`
       }
